@@ -77,15 +77,15 @@ double CuMinV(int x, int y, vector<vector<int>>& EN)
 		}
 		else if (y == EN[0].size() - 1)
 		{
-			total = EN[y][x] + min(CuMinV(x + 1,y - 1, EN), CuMinV(x + 1, y, EN));
+			total = EN[x][y] + min(CuMinV(x + 1,y - 1, EN), CuMinV(x + 1, y, EN));
 		}
 		else
 		{
-			total = EN[y][x] + min(min(CuMinV(x + 1, y - 1, EN), CuMinV(x + 1, y, EN)), CuMinV(x + 1, y + 1, EN));
+			total = EN[x][y] + min(min(CuMinV(x + 1, y - 1, EN), CuMinV(x + 1, y, EN)), CuMinV(x + 1, y + 1, EN));
 		}
 	}
 	else if (x == EN.size() - 1)
-		total = EN[y][x];
+		total = EN[x][y];
 
 	//cout << total << endl;
 	return total;
@@ -170,9 +170,9 @@ void DelH(int x, int y, vector<vector<int>>& en, vector<vector<int>>& pic)
 		for (i; i < en.size() - 1; ++i)
 			en[i][y] = en[i+1][y];
 	}
+	//en[en.size() - 1].erase(en[en.size()].begin());
 	
-	
-	//en[x][y] = -1;
+	en[x][y] = -1;
 	
 
 }
@@ -181,18 +181,20 @@ void DelH(int x, int y, vector<vector<int>>& en, vector<vector<int>>& pic)
 int main(int argc, char* argv[])
 {
 	int size = 7;
+	int Hsize = 7;
+	int Vsize = 12;
 	vector<vector<int>> PIC(size, vector<int>(size));
 	string name;
 	string header;
 	vector<vector<int>> ENERGY(size, vector<int>(size));
 	vector<int>HSEAML(size);
 	vector<int>VSEAML(size);
-
+	srand(1024);
 	for (int i = 0; i < size; i++)
 	{
 		for (int j = 0; j < size; j++)
 		{
-			PIC[i][j] = i*j;
+			PIC[i][j] = rand() % 10;
 			ENERGY[i][j] = 0;
 		}
 
@@ -208,12 +210,10 @@ int main(int argc, char* argv[])
 		}cout << endl;
 
 	}cout << endl;
+	cout << "0V=" << CuMinV(0, 0, ENERGY) << endl;
+	cout << "0H=" << CuMinH(0, 0, ENERGY) << endl;
 
-	cout << "0 H seam=" << CuMinH(0, 0, ENERGY) << endl;
-	
-	cout << "0 V seam=" << CuMinV(0, 0, ENERGY) << endl;
-
-DelH(3, 0, ENERGY, PIC);
+DelV(0,4, ENERGY, PIC);
 
 	for (int i = 0; i < ENERGY.size(); i++)
 	{
