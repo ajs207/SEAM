@@ -186,33 +186,49 @@ void DelH(int x, int y, vector<vector<int>>& en, vector<vector<int>>& pic)
 
 int main(int argc, char* argv[])
 {
-	int size = 500;
-	//int Hsize = 7;
-	//int Vsize = 12;
-	vector<vector<int>> PIC(size, vector<int>(size));
-	//string name;
-	//string header;
-	vector<vector<int>> ENERGY(size, vector<int>(size));
-	//vector<int>HSEAML(size);
-	//vector<int>VSEAML(size);
-	ifstream input;
+	int size = 10;
+	int H;
+	int V=H=size;
+
+	
+	fstream input;
 
 	srand(185);
-	if(argc!=4)
-	{
-	//fill vector for random test!!!
-		for (int i = 0; i < ENERGY.size(); i++)
-		{
-			for (int j = 0; j < ENERGY[0].size(); j++)
-			{
-				PIC[i][j] = rand() % 255;
-			}
-		}
-	}
-	else
-	{
+	
+	
 		input.open(argv[1]);
-		cout<<argv[1]<<endl<<endl;
+		string b;
+		
+
+		getline(input,b);
+		getline(input,b);
+		
+		
+		input >> H;
+		input >>V;
+		
+		vector<vector<int>> PIC(V, vector<int>(H));
+		vector<vector<int>> ENERGY(V, vector<int>(H));
+		vector<int>HSEAML(H);
+		vector<int>VSEAML(V);
+		
+		
+		getline(input,b);
+		getline(input,b);
+
+		
+		for(int i=0; i<V;++i)
+		{
+			for(int j=0;j<H;++j)
+				input>>PIC[i][j];
+		}
+		
+	
+	
+	
+	//fill vector for random test!!!
+		if(argc!=4 && argc!=2)
+		{
 		for (int i = 0; i < ENERGY.size(); i++)
 		{
 			for (int j = 0; j < ENERGY[0].size(); j++)
@@ -220,20 +236,36 @@ int main(int argc, char* argv[])
 				PIC[i][j] = rand() % 255;
 			}
 		}
+		}
+	
+	
+	
+	
+	if(argc==4)
+	{
+		int VS=atoi(argv[2]);
+		int HS=atoi(argv[3]);
+		cout<<"Remove "<<VS<<" vertical seams"<<endl;
+		cout<<"Remove "<<HS<<" horizontal seams"<<endl;
+		int VP;
+		int HP=VP=0;
+		
+		for(int r=0; r<VS;++r)
+		{
+			cout<<r<<endl;
+			
+				Energy(PIC, ENERGY);
+
+				for(int i=0;i<ENERGY[0].size();++i)
+					{cout<< i<<" ";
+						if(CuMinV(0,i,ENERGY)<=CuMinV(0,VP,ENERGY))
+						VP=i;			
+					}	cout<<endl;
+			DelV(0,VP,ENERGY,PIC);
+		}
+			
 	}
 	
-	//set energy vector
-	Energy(PIC, ENERGY);
-	//output energy vector
-	/*for (int i = 0; i < ENERGY.size(); i++)
-	{
-		for (int j = 0; j < ENERGY.size(); j++)
-		{
-			cout << ENERGY[i][j] << "	";
-		}cout << endl;
-
-	}cout << endl<<endl;*/
-
 	
 	//test  delete
 /*for(int i=0; i<3;++i)
@@ -252,10 +284,13 @@ int main(int argc, char* argv[])
 
 	}cout << endl;
 	}*/
-if(argc==2 || argc==4){
+
+
+if(argc==2 || argc==4)
+{
 ofstream output;
 string filename=argv[1];
-output.open(filename + "_processed");
+output.open(filename + "_processed.pgm");
 output<<"P2"<<endl;
 output<<"#processed_"<<argv[1]<<endl;
 output<<ENERGY[0].size()<<" "<<ENERGY.size()<<endl;
