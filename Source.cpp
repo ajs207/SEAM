@@ -167,7 +167,10 @@ void DelH(int x, int y, vector<vector<int>>& en, vector<vector<int>>& pic)
 	if (x != en.size())
 	{
 		for (i; i < en.size() - 1; ++i)
-			en[i][y] = en[i+1][y];
+			{
+				en[i][y] = en[i+1][y];
+				pic[i][y] = pic[i+1][y];
+			}
 	}
 	if(y==0)
 	{
@@ -233,5 +236,7 @@ int main(int argc, char* argv[])
 		}cout << endl;
 
 	}cout << endl;*/
+	ofstream myfile("newfile.txt");
+	for(int i=0; i<pic.
 
 }
