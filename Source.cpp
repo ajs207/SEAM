@@ -18,7 +18,7 @@ void Energy(const vector<vector<int>>& pic, vector<vector<int>>& E)
 		
 		for (int j = 0; j < pic[0].size(); ++j)
 		{
-			
+			E[i][j]=0;
 			if (i == 0)
 				E[i][j] = E[i][j] + abs(pic[i][j] - pic[i + 1][j]);
 			if (j == 0)
@@ -127,7 +127,7 @@ void DelV(int x, int y, vector<vector<int>>& en, vector<vector<int>>& pic)
 
 		pic[x].erase(pic[x].begin() + y);
 		en[x].erase(en[x].begin() + y);
-		//en[x][y] = -1;
+	
 }
 //DelH(row#,0,ENERGY,PIC);
 void DelH(int x, int y, vector<vector<int>>& en, vector<vector<int>>& pic)
@@ -175,6 +175,7 @@ void DelH(int x, int y, vector<vector<int>>& en, vector<vector<int>>& pic)
 	if(y==0)
 	{
 		en.resize(en.size()-1);
+		pic.resize(pic.size()-1);
 	}
 	
 	
@@ -185,58 +186,91 @@ void DelH(int x, int y, vector<vector<int>>& en, vector<vector<int>>& pic)
 
 int main(int argc, char* argv[])
 {
-	int size = 7;
-	int Hsize = 7;
-	int Vsize = 12;
+	int size = 500;
+	//int Hsize = 7;
+	//int Vsize = 12;
 	vector<vector<int>> PIC(size, vector<int>(size));
-	string name;
-	string header;
+	//string name;
+	//string header;
 	vector<vector<int>> ENERGY(size, vector<int>(size));
-	vector<int>HSEAML(size);
-	vector<int>VSEAML(size);
+	//vector<int>HSEAML(size);
+	//vector<int>VSEAML(size);
+	ifstream input;
+
 	srand(185);
-	//fill vector for random test!!!
-	for (int i = 0; i < size; i++)
+	if(argc!=4)
 	{
-		for (int j = 0; j < size; j++)
+	//fill vector for random test!!!
+		for (int i = 0; i < ENERGY.size(); i++)
 		{
-			PIC[i][j] = rand() % 5;
-			ENERGY[i][j] = 0;
+			for (int j = 0; j < ENERGY[0].size(); j++)
+			{
+				PIC[i][j] = rand() % 255;
+			}
 		}
-
 	}
-
+	else
+	{
+		input.open(argv[1]);
+		cout<<argv[1]<<endl<<endl;
+		for (int i = 0; i < ENERGY.size(); i++)
+		{
+			for (int j = 0; j < ENERGY[0].size(); j++)
+			{
+				PIC[i][j] = rand() % 255;
+			}
+		}
+	}
+	
 	//set energy vector
 	Energy(PIC, ENERGY);
 	//output energy vector
-	for (int i = 0; i < ENERGY.size(); i++)
+	/*for (int i = 0; i < ENERGY.size(); i++)
 	{
 		for (int j = 0; j < ENERGY.size(); j++)
 		{
 			cout << ENERGY[i][j] << "	";
 		}cout << endl;
 
-	}cout << endl<<endl;
+	}cout << endl<<endl;*/
 
-
-	//test CuMIN functions
-	/*cout << "0V=" << CuMinV(0, 0, ENERGY) << endl;
-	cout << "0H=" << CuMinH(0, 0, ENERGY) << endl;*/
-
-	//test  delete
-	//DelV(0,4,ENERGY,PIC);
 	
+	//test  delete
+/*for(int i=0; i<3;++i)
+	
+	{
+		DelH(0,0,ENERGY,PIC);
+		Energy(PIC,ENERGY);
 
 	//output after deletion
-	/*for (int i = 0; i < ENERGY.size(); i++)
+	for (int i = 0; i < ENERGY.size(); i++)
 	{
 		for (int j = 0; j < ENERGY[0].size(); j++)
 		{
 			cout << ENERGY[i][j] << "	";
 		}cout << endl;
 
-	}cout << endl;*/
-	ofstream myfile("newfile.txt");
-	for(int i=0; i<pic.
+	}cout << endl;
+	}*/
+if(argc==2 || argc==4){
+ofstream output;
+string filename=argv[1];
+output.open(filename + "_processed");
+output<<"P2"<<endl;
+output<<"#processed_"<<argv[1]<<endl;
+output<<ENERGY[0].size()<<" "<<ENERGY.size()<<endl;
+output<<255<<endl;
+for (int i = 0; i < PIC.size(); i++)
+	{
+		for (int j = 0; j < PIC[0].size(); j++)
+		{
+			output<<PIC[i][j] <<" ";
+		}output<< endl;
+
+	}output<< endl;
+output.close();
+}
+if(input.is_open())
+	input.close();
 
 }
