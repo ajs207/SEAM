@@ -73,15 +73,15 @@ double CuMinV(int x, int y, vector<vector<int>>& EN)
 
 		if (y == 0)
 		{
-			total = EN[x][y] + min(CuMinH(x+1,y, EN), CuMinH(x + 1, y + 1, EN));
+			total = EN[x][y] + min(CuMinV(x+1,y, EN), CuMinV(x + 1, y + 1, EN));
 		}
 		else if (y == EN[0].size() - 1)
 		{
-			total = EN[y][x] + min(CuMinH(x + 1,y - 1, EN), CuMinH(x + 1, y, EN));
+			total = EN[y][x] + min(CuMinV(x + 1,y - 1, EN), CuMinV(x + 1, y, EN));
 		}
 		else
 		{
-			total = EN[y][x] + min(min(CuMinH(x + 1, y - 1, EN), CuMinH(x + 1, y, EN)), CuMinH(x + 1, y + 1, EN));
+			total = EN[y][x] + min(min(CuMinV(x + 1, y - 1, EN), CuMinV(x + 1, y, EN)), CuMinV(x + 1, y + 1, EN));
 		}
 	}
 	else if (x == EN.size() - 1)
@@ -90,7 +90,44 @@ double CuMinV(int x, int y, vector<vector<int>>& EN)
 	//cout << total << endl;
 	return total;
 }
+void DelV(int x, int y, vector<vector<int>>& en, vector<vector<int>>& pic)
+{
 
+	if (x != en.size() - 1)
+	{
+
+		if (y == 0)
+		{
+			if (en[x+1][y] < en[x + 1][y + 1])
+				DelV(x+1, y , en, pic);
+			else
+				DelV(x + 1, y + 1, en, pic);
+			
+		}
+		else if (y == en[0].size() - 1)
+		{
+			if (en[x+1][y ] < en[x + 1][y - 1])
+				DelV(x+1, y, en, pic);
+			else
+				DelV(x + 1, y - 1, en, pic);
+
+		}
+		else
+		{
+			if (en[x + 1][y - 1] < en[x+1][y] && en[x + 1][y - 1] < en[x + 1][y + 1])
+				DelV(x + 1, y - 1, en, pic);
+			else if (en[x+1][y] < en[x + 1][y + 1])
+				DelV(x+1, y , en, pic);
+			else
+				DelV(x + 1, y + 1, en, pic);
+			
+		}
+	}
+
+		pic[x].erase(pic[x].begin() + y);
+		en[x].erase(en[x].begin() + y);
+		//en[x][y] = -1;
+}
 void DelH(int x, int y, vector<vector<int>>& en, vector<vector<int>>& pic)
 {
 	if (y != en[0].size() - 1)
@@ -139,44 +176,7 @@ void DelH(int x, int y, vector<vector<int>>& en, vector<vector<int>>& pic)
 	
 
 }
-void DelV(int x, int y, vector<vector<int>>& en, vector<vector<int>>& pic)
-{
 
-	if (x != en.size() - 1)
-	{
-
-		if (y == 0)
-		{
-			if (en[x+1][y] < en[x + 1][y + 1])
-				DelV(x+1, y , en, pic);
-			else
-				DelV(x + 1, y + 1, en, pic);
-			
-		}
-		else if (y == en[0].size() - 1)
-		{
-			if (en[x+1][y ] < en[x + 1][y - 1])
-				DelV(x+1, y, en, pic);
-			else
-				DelV(x + 1, y - 1, en, pic);
-
-		}
-		else
-		{
-			if (en[x + 1][y - 1] < en[x+1][y] && en[x + 1][y - 1] < en[x + 1][y + 1])
-				DelV(x + 1, y - 1, en, pic);
-			else if (en[x+1][y] < en[x + 1][y + 1])
-				DelV(x+1, y , en, pic);
-			else
-				DelV(x + 1, y + 1, en, pic);
-			
-		}
-	}
-
-		pic[x].erase(pic[x].begin() + y);
-		en[x].erase(en[x].begin() + y);
-		//en[x][y] = -1;
-}
 
 int main(int argc, char* argv[])
 {
@@ -209,8 +209,9 @@ int main(int argc, char* argv[])
 
 	}cout << endl;
 
+	cout << "0 H seam=" << CuMinH(0, 0, ENERGY) << endl;
 	
-	
+	cout << "0 V seam=" << CuMinV(0, 0, ENERGY) << endl;
 
 DelH(3, 0, ENERGY, PIC);
 
