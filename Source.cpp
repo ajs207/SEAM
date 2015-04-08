@@ -90,6 +90,7 @@ double CuMinV(int x, int y, vector<vector<int>>& EN)
 	//cout << total << endl;
 	return total;
 }
+//DelV(0,colum#,ENERGY,PIC);
 void DelV(int x, int y, vector<vector<int>>& en, vector<vector<int>>& pic)
 {
 
@@ -128,6 +129,7 @@ void DelV(int x, int y, vector<vector<int>>& en, vector<vector<int>>& pic)
 		en[x].erase(en[x].begin() + y);
 		//en[x][y] = -1;
 }
+//DelH(row#,0,ENERGY,PIC);
 void DelH(int x, int y, vector<vector<int>>& en, vector<vector<int>>& pic)
 {
 	if (y != en[0].size() - 1)
@@ -161,18 +163,18 @@ void DelH(int x, int y, vector<vector<int>>& en, vector<vector<int>>& pic)
 		}
 	}
 
-		//pic[x].erase(pic[x].begin() + y);
-	
-	//en[x].erase(en[x].begin() + y);
 	int i = x;
 	if (x != en.size())
 	{
 		for (i; i < en.size() - 1; ++i)
 			en[i][y] = en[i+1][y];
 	}
-	//en[en.size() - 1].erase(en[en.size()].begin());
+	if(y==0)
+	{
+		en.resize(en.size()-1);
+	}
 	
-	en[x][y] = -1;
+	
 	
 
 }
@@ -189,19 +191,21 @@ int main(int argc, char* argv[])
 	vector<vector<int>> ENERGY(size, vector<int>(size));
 	vector<int>HSEAML(size);
 	vector<int>VSEAML(size);
-	srand(1024);
+	srand(185);
+	//fill vector for random test!!!
 	for (int i = 0; i < size; i++)
 	{
 		for (int j = 0; j < size; j++)
 		{
-			PIC[i][j] = rand() % 10;
+			PIC[i][j] = rand() % 5;
 			ENERGY[i][j] = 0;
 		}
 
 	}
 
-	
+	//set energy vector
 	Energy(PIC, ENERGY);
+	//output energy vector
 	for (int i = 0; i < ENERGY.size(); i++)
 	{
 		for (int j = 0; j < ENERGY.size(); j++)
@@ -209,19 +213,25 @@ int main(int argc, char* argv[])
 			cout << ENERGY[i][j] << "	";
 		}cout << endl;
 
-	}cout << endl;
-	cout << "0V=" << CuMinV(0, 0, ENERGY) << endl;
-	cout << "0H=" << CuMinH(0, 0, ENERGY) << endl;
+	}cout << endl<<endl;
 
-DelV(0,4, ENERGY, PIC);
 
-	for (int i = 0; i < ENERGY.size(); i++)
+	//test CuMIN functions
+	/*cout << "0V=" << CuMinV(0, 0, ENERGY) << endl;
+	cout << "0H=" << CuMinH(0, 0, ENERGY) << endl;*/
+
+	//test  delete
+	//DelV(0,4,ENERGY,PIC);
+	
+
+	//output after deletion
+	/*for (int i = 0; i < ENERGY.size(); i++)
 	{
 		for (int j = 0; j < ENERGY[0].size(); j++)
 		{
 			cout << ENERGY[i][j] << "	";
 		}cout << endl;
 
-	}cout << endl;
+	}cout << endl;*/
 
 }
