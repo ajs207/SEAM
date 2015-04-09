@@ -204,6 +204,11 @@ void DelH(int x, int y, vector<vector<int>>& en, vector<vector<int>>& pic)
 
 int main(int argc, char* argv[])
 {
+	if (argc != 4)
+	{
+		cout << "invald number of arguments" << endl;
+			return 0;
+	}
 	int size = 10;
 	int H;
 	int V = H = size;
@@ -243,17 +248,6 @@ int main(int argc, char* argv[])
 
 	
 
-	//fill vector for random test!!!
-	if (argc != 4 && argc != 2)
-	{
-		for (int i = 0; i < ENERGY.size(); i++)
-		{
-			for (int j = 0; j < ENERGY[0].size(); j++)
-			{
-				PIC[i][j] = rand() % 255;
-			}
-		}
-	}
 	
 	
 	Energy(PIC, ENERGY);
@@ -268,9 +262,11 @@ int main(int argc, char* argv[])
 		cout << "Remove " << HS << " horizontal seams" << endl;
 			
 		int mins;
+		//remove vertical
 		for (int i = 0; i < VS; ++i)
 		{
 			mins = 0;
+			
 			for (int y = 0; y < ENERGY[0].size(); ++y)
 			{
 				VSEAML[y] = CuMinV(0, y, ENERGY);
@@ -279,7 +275,9 @@ int main(int argc, char* argv[])
 			}
 			DelV(0, mins, ENERGY, PIC);
 			VSEAML.erase(VSEAML.begin());
+			
 		}
+		//remove horizontal
 		for (int i = 0; i < HS; ++i)
 		{
 			mins = 0;
@@ -291,6 +289,7 @@ int main(int argc, char* argv[])
 			}
 			DelH(mins, 0, ENERGY, PIC);
 			HSEAML.erase(HSEAML.begin());
+			
 		}
 		
 
@@ -304,6 +303,9 @@ int main(int argc, char* argv[])
 	{
 		ofstream output;
 		string filename = argv[1];
+		int VS = atoi(argv[2]);
+		int HS = atoi(argv[3]);
+		
 		output.open(filename + "_processed.pgm");
 		output << "P2" << endl;
 		output << "#processed_" << argv[1] << endl;
