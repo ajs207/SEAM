@@ -11,84 +11,102 @@ using namespace std;
 
 void Energy(const vector<vector<int>>& pic, vector<vector<int>>& E)
 {
-	
-	
+
+
 	for (int i = 0; i < pic.size(); ++i)
 	{
-		
+
 		for (int j = 0; j < pic[0].size(); ++j)
 		{
-			E[i][j]=0;
+			E[i][j] = 0;
 			if (i == 0)
 				E[i][j] = E[i][j] + abs(pic[i][j] - pic[i + 1][j]);
 			if (j == 0)
 				E[i][j] = E[i][j] + abs(pic[i][j] - pic[i][j + 1]);
-			if (i == pic.size()-1)
+			if (i == pic.size() - 1)
 				E[i][j] = E[i][j] + abs(pic[i][j] - pic[i - 1][j]);
-			if (j == pic[1].size()-1)
+			if (j == pic[1].size() - 1)
 				E[i][j] = E[i][j] + abs(pic[i][j] - pic[i][j - 1]);
 			if (i != 0 && i != pic.size() - 1 && j != 0 && j != pic[1].size() - 1)
 				E[i][j] = abs(pic[i][j] - pic[i - 1][j]) + abs(pic[i][j] - pic[i + 1][j]) + abs(pic[i][j] - pic[i][j - 1]) + abs(pic[i][j] - pic[i][j + 1]);
-		
+
 		}
 	}
-	
+
 }
 
-double CuMinH(int x, int y, vector<vector<int>>& EN)
+double CuMinH(int x, int y, vector<vector<int>>& en)
 {
-	double total = 0;
-
-	if (y != EN[0].size() - 1)
+	
+	if (y != en[0].size() - 1)
 	{
-		
+
 		if (x == 0)
 		{
-			total = EN[x][y] + min(CuMinH(x, y + 1, EN), CuMinH(x + 1, y + 1, EN));
+			if (en[x][y + 1] <= en[x + 1][y + 1])
+				return en[x][y]+CuMinH(x, y + 1, en);
+			else
+				return en[x][y] + CuMinH(x + 1, y + 1, en);
+
 		}
-		else if (x == EN.size()-1)
+		else if (x == en.size() - 1)
 		{
-			total = EN[x][y] + min(CuMinH(x - 1, y + 1, EN), CuMinH(x, y + 1, EN));
+			if (en[x - 1][y + 1] <= en[x][y + 1])
+				return en[x][y] + CuMinH(x - 1, y + 1, en);
+			else
+				return en[x][y] + CuMinH(x, y + 1, en);
+
 		}
 		else
 		{
-			total = EN[x][y] + min(min(CuMinH(x - 1, y + 1, EN), CuMinH(x, y + 1, EN)), CuMinH(x + 1, y + 1, EN));
+			if (en[x - 1][y + 1] <= en[x][y + 1] && en[x - 1][y + 1] <= en[x + 1][y + 1])
+				return en[x][y] + CuMinH(x - 1, y + 1, en);
+			else if (en[x][y + 1] <= en[x + 1][y + 1])
+				return en[x][y] + CuMinH(x, y + 1, en);
+			else
+				return en[x][y] + CuMinH(x + 1, y + 1, en);
+
 		}
 	}
-	else if (y == EN[0].size()-1)
-		total = EN[x][y];
-
-	//cout << total << endl;
-	return total;
+	return en[x][y];
 }
 
-double CuMinV(int x, int y, vector<vector<int>>& EN)
+double CuMinV(int x, int y, vector<vector<int>>& en)
 {
-	double total = 0;
-
 	
 
-	if (x != EN.size() - 1)
+	if (x != en.size() - 1)
 	{
 
 		if (y == 0)
 		{
-			total = EN[x][y] + min(CuMinV(x+1,y, EN), CuMinV(x + 1, y + 1, EN));
+			if (en[x + 1][y] <= en[x + 1][y + 1])
+				return en[x][y] +CuMinV(x + 1, y, en);
+			else
+				return en[x][y] + CuMinV(x + 1, y + 1, en);
+
 		}
-		else if (y == EN[0].size() - 1)
+		else if (y == en[0].size() - 1)
 		{
-			total = EN[x][y] + min(CuMinV(x + 1,y - 1, EN), CuMinV(x + 1, y, EN));
+			if (en[x + 1][y - 1] <= en[x + 1][y])
+				return en[x][y] + CuMinV(x + 1, y - 1, en);
+			else
+				return en[x][y] + CuMinV(x + 1, y, en);
+
 		}
 		else
 		{
-			total = EN[x][y] + min(min(CuMinV(x + 1, y - 1, EN), CuMinV(x + 1, y, EN)), CuMinV(x + 1, y + 1, EN));
+			if (en[x + 1][y - 1] <= en[x + 1][y] && en[x + 1][y - 1] <= en[x + 1][y + 1])
+				return en[x][y] + CuMinV(x + 1, y - 1, en);
+			else if (en[x + 1][y] <= en[x + 1][y + 1])
+				return en[x][y] + CuMinV(x + 1, y, en);
+			else
+				return en[x][y] + CuMinV(x + 1, y + 1, en);
+
 		}
 	}
-	else if (x == EN.size() - 1)
-		total = EN[x][y];
 
-	//cout << total << endl;
-	return total;
+	return en[x][y];
 }
 //DelV(0,colum#,ENERGY,PIC);
 void DelV(int x, int y, vector<vector<int>>& en, vector<vector<int>>& pic)
@@ -99,35 +117,35 @@ void DelV(int x, int y, vector<vector<int>>& en, vector<vector<int>>& pic)
 
 		if (y == 0)
 		{
-			if (en[x+1][y] < en[x + 1][y + 1])
-				DelV(x+1, y , en, pic);
+			if (en[x + 1][y] <= en[x + 1][y + 1])
+				DelV(x + 1, y, en, pic);
 			else
 				DelV(x + 1, y + 1, en, pic);
-			
+
 		}
 		else if (y == en[0].size() - 1)
 		{
-			if (en[x+1][y ] < en[x + 1][y - 1])
-				DelV(x+1, y, en, pic);
-			else
+			if (en[x + 1][y - 1] <= en[x + 1][y])
 				DelV(x + 1, y - 1, en, pic);
+			else
+				DelV(x + 1, y, en, pic);
 
 		}
 		else
 		{
-			if (en[x + 1][y - 1] < en[x+1][y] && en[x + 1][y - 1] < en[x + 1][y + 1])
+			if (en[x + 1][y - 1] <= en[x + 1][y] && en[x + 1][y - 1] <= en[x + 1][y + 1])
 				DelV(x + 1, y - 1, en, pic);
-			else if (en[x+1][y] < en[x + 1][y + 1])
-				DelV(x+1, y , en, pic);
+			else if (en[x + 1][y] <= en[x + 1][y + 1])
+				DelV(x + 1, y, en, pic);
 			else
 				DelV(x + 1, y + 1, en, pic);
-			
+
 		}
 	}
 
-		pic[x].erase(pic[x].begin() + y);
-		en[x].erase(en[x].begin() + y);
-	
+	pic[x].erase(pic[x].begin() + y);
+	en[x].erase(en[x].begin() + y);
+
 }
 //DelH(row#,0,ENERGY,PIC);
 void DelH(int x, int y, vector<vector<int>>& en, vector<vector<int>>& pic)
@@ -137,29 +155,29 @@ void DelH(int x, int y, vector<vector<int>>& en, vector<vector<int>>& pic)
 
 		if (x == 0)
 		{
-			if (en[x][y + 1] < en[x + 1][y + 1])
+			if (en[x][y + 1] <= en[x + 1][y + 1])
 				DelH(x, y + 1, en, pic);
 			else
 				DelH(x + 1, y + 1, en, pic);
-			
+
 		}
 		else if (x == en.size() - 1)
 		{
-			if (en[x][y + 1] < en[x - 1][y + 1])
-				DelH(x, y + 1, en, pic);
-			else
+			if (en[x - 1][y + 1] <= en[x][y + 1])
 				DelH(x - 1, y + 1, en, pic);
+			else
+				DelH(x, y + 1, en, pic);
 
 		}
 		else
 		{
-			if (en[x - 1][y + 1] < en[x][y + 1] && en[x - 1][y + 1] < en[x + 1][y + 1])
+			if (en[x - 1][y + 1] <= en[x][y + 1] && en[x - 1][y + 1] <= en[x + 1][y + 1])
 				DelH(x - 1, y + 1, en, pic);
-			else if (en[x][y + 1] < en[x + 1][y + 1])
+			else if (en[x][y + 1] <= en[x + 1][y + 1])
 				DelH(x, y + 1, en, pic);
 			else
 				DelH(x + 1, y + 1, en, pic);
-			
+
 		}
 	}
 
@@ -167,19 +185,19 @@ void DelH(int x, int y, vector<vector<int>>& en, vector<vector<int>>& pic)
 	if (x != en.size())
 	{
 		for (i; i < en.size() - 1; ++i)
-			{
-				en[i][y] = en[i+1][y];
-				pic[i][y] = pic[i+1][y];
-			}
+		{
+			en[i][y] = en[i + 1][y];
+			pic[i][y] = pic[i + 1][y];
+		}
 	}
-	if(y==0)
+	if (y == 0)
 	{
-		en.resize(en.size()-1);
-		pic.resize(pic.size()-1);
+		en.resize(en.size() - 1);
+		pic.resize(pic.size() - 1);
 	}
-	
-	
-	
+
+
+
 
 }
 
@@ -188,47 +206,46 @@ int main(int argc, char* argv[])
 {
 	int size = 10;
 	int H;
-	int V=H=size;
+	int V = H = size;
 
-	
+
 	fstream input;
 
 	srand(185);
-	
-	
-		input.open(argv[1]);
-		string b;
-		
 
-		getline(input,b);
-		getline(input,b);
-		
-		
-		input >> H;
-		input >>V;
-		
-		vector<vector<int>> PIC(V, vector<int>(H));
-		vector<vector<int>> ENERGY(V, vector<int>(H));
-		vector<int>HSEAML(H);
-		vector<int>VSEAML(V);
-		
-		
-		getline(input,b);
-		getline(input,b);
 
-		
-		for(int i=0; i<V;++i)
-		{
-			for(int j=0;j<H;++j)
-				input>>PIC[i][j];
-		}
-		
+	input.open(argv[1]);
+	string b;
+
+
+	getline(input, b);
+	getline(input, b);
+
+
+	input >> H;
+	input >> V;
+
+	vector<vector<int>> PIC(V, vector<int>(H));
+	vector<vector<int>> ENERGY(V, vector<int>(H));
+	vector<int>HSEAML(V);
+	vector<int>VSEAML(H);
+
+
+	getline(input, b);
+	getline(input, b);
+
+
+	for (int i = 0; i<V; ++i)
+	{
+		for (int j = 0; j<H; ++j)
+			input >> PIC[i][j];
+	}
+
 	
-	
-	
+
 	//fill vector for random test!!!
-		if(argc!=4 && argc!=2)
-		{
+	if (argc != 4 && argc != 2)
+	{
 		for (int i = 0; i < ENERGY.size(); i++)
 		{
 			for (int j = 0; j < ENERGY[0].size(); j++)
@@ -236,76 +253,73 @@ int main(int argc, char* argv[])
 				PIC[i][j] = rand() % 255;
 			}
 		}
-		}
-	
-	
-	
-	
-	if(argc==4)
-	{
-		int VS=atoi(argv[2]);
-		int HS=atoi(argv[3]);
-		cout<<"Remove "<<VS<<" vertical seams"<<endl;
-		cout<<"Remove "<<HS<<" horizontal seams"<<endl;
-		int VP;
-		int HP=VP=0;
-		
-		for(int r=0; r<VS;++r)
-		{
-			cout<<r<<endl;
-			
-				Energy(PIC, ENERGY);
-
-				for(int i=0;i<ENERGY[0].size();++i)
-					{cout<< i<<" ";
-						if(CuMinV(0,i,ENERGY)<=CuMinV(0,VP,ENERGY))
-						VP=i;			
-					}	cout<<endl;
-			DelV(0,VP,ENERGY,PIC);
-		}
-			
 	}
 	
 	
-	//test  delete
-/*for(int i=0; i<3;++i)
+	Energy(PIC, ENERGY);
 	
-	{
-		DelH(0,0,ENERGY,PIC);
-		Energy(PIC,ENERGY);
+	
 
-	//output after deletion
-	for (int i = 0; i < ENERGY.size(); i++)
+	if (argc == 4)
 	{
-		for (int j = 0; j < ENERGY[0].size(); j++)
+		int VS = atoi(argv[2]);
+		int HS = atoi(argv[3]);
+		cout << "Remove " << VS << " vertical seams" << endl;
+		cout << "Remove " << HS << " horizontal seams" << endl;
+			
+		int mins;
+		for (int i = 0; i < VS; ++i)
 		{
-			cout << ENERGY[i][j] << "	";
-		}cout << endl;
-
-	}cout << endl;
-	}*/
-
-
-if(argc==2 || argc==4)
-{
-ofstream output;
-string filename=argv[1];
-output.open(filename + "_processed.pgm");
-output<<"P2"<<endl;
-output<<"#processed_"<<argv[1]<<endl;
-output<<ENERGY[0].size()<<" "<<ENERGY.size()<<endl;
-output<<255<<endl;
-for (int i = 0; i < PIC.size(); i++)
-	{
-		for (int j = 0; j < PIC[0].size(); j++)
+			mins = 0;
+			for (int y = 0; y < ENERGY[0].size(); ++y)
+			{
+				VSEAML[y] = CuMinV(0, y, ENERGY);
+				if (VSEAML[y] < CuMinH(0, mins, ENERGY))
+					mins = y;
+			}
+			DelV(0, mins, ENERGY, PIC);
+			VSEAML.erase(VSEAML.begin());
+		}
+		for (int i = 0; i < HS; ++i)
 		{
-			output<<PIC[i][j] <<" ";
-		}output<< endl;
+			mins = 0;
+			for (int y = 0; y < ENERGY.size(); ++y)
+			{
+				HSEAML[y] = CuMinH(y, 0, ENERGY);
+				if (HSEAML[y] < CuMinH(mins, 0, ENERGY))
+					mins = y;
+			}
+			DelH(mins, 0, ENERGY, PIC);
+			HSEAML.erase(HSEAML.begin());
+		}
+		
 
-	}output<< endl;
-output.close();
-}
-if(input.is_open())
-	input.close();
+	}
+
+
+	
+
+
+	if (argc == 2 || argc == 4)
+	{
+		ofstream output;
+		string filename = argv[1];
+		output.open(filename + "_processed.pgm");
+		output << "P2" << endl;
+		output << "#processed_" << argv[1] << endl;
+		output << ENERGY[0].size() << " " << ENERGY.size() << endl;
+		output << 255 << endl;
+		for (int i = 0; i < PIC.size(); i++)
+		{
+			for (int j = 0; j < PIC[0].size(); j++)
+			{
+				output << PIC[i][j] << " ";
+			}output << endl;
+
+		}output << endl;
+		output.close();
+	}
+	if (input.is_open())
+		input.close();
 
 }
